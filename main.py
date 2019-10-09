@@ -45,7 +45,7 @@ def get_models(args):
     elif args.model == 'scribbler_dilate_128':
         netG = scribbler_dilate_128.ScribblerDilate128(5, 3, 32)
     else:
-        print(args.model + ' not support. Using Scribbler model')
+        print((args.model + ' not support. Using Scribbler model'))
         netG = scribbler.Scribbler(5, 3, 32)
 
     if args.color_space == 'lab':

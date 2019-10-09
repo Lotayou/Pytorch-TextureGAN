@@ -13,8 +13,8 @@ def make_dot(var, params=None):
             require grad (TODO: make optional)
     """
     if params is not None:
-        assert isinstance(params.values()[0], Variable)
-        param_map = {id(v): k for k, v in params.items()}
+        assert isinstance(list(params.values())[0], Variable)
+        param_map = {id(v): k for k, v in list(params.items())}
 
     node_attr = dict(style='filled',
                      shape='box',

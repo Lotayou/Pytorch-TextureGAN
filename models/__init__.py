@@ -29,7 +29,7 @@ def save_network(model, network_label, epoch, iteration, args):
 
     torch.save(model_state, save_path)
     model.cuda(device_id=args.gpu)
-    print("Saved {0} at epoch: {1}, iter: {2}".format(network_label, epoch, iteration))
+    print(("Saved {0} at epoch: {1}, iter: {2}".format(network_label, epoch, iteration)))
 
 
 def load_network(model, network_label, epoch, iteration, args):
@@ -59,7 +59,7 @@ def load_network(model, network_label, epoch, iteration, args):
     
     model.cuda(device_id=args.gpu)
 
-    print('Loaded {0} from epoch: {1} itr: {2}'.format(network_label, epoch, args.load))
+    print(('Loaded {0} from epoch: {1} itr: {2}'.format(network_label, epoch, args.load)))
 
 
 def weights_init(m):
@@ -77,7 +77,7 @@ def get_norm_layer(norm_type):
     elif norm_type == 'instance':
         norm_layer = nn.InstanceNorm2d
     else:
-        print('normalization layer [%s] is not found' % norm_type)
+        print(('normalization layer [%s] is not found' % norm_type))
     return norm_layer
 
 
@@ -118,7 +118,7 @@ def print_network(net):
     for param in net.parameters():
         num_params += param.numel()
     print(net)
-    print('Total number of parameters: %d' % num_params)
+    print(('Total number of parameters: %d' % num_params))
 
 
 # Defines the GAN loss which uses either LSGAN or the regular GAN.
@@ -306,7 +306,7 @@ class FeatureExtractor(nn.Module):
 
     def forward(self, x):
         outputs = []
-        for name, module in self.submodule._modules.items():
+        for name, module in list(self.submodule._modules.items()):
             x = module(x)
             if name in self.extracted_layers:
                 outputs += [x]

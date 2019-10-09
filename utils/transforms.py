@@ -1,4 +1,4 @@
-from __future__ import division
+
 import torchvision.transforms
 import torch
 import math

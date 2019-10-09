@@ -391,7 +391,7 @@ def train(model, train_loader, val_loader, input_stack, target_img, target_textu
 
     for i, data in enumerate(train_loader):
 
-        print("Epoch: {0}       Iteration: {1}".format(epoch, i))
+        print(("Epoch: {0}       Iteration: {1}".format(epoch, i)))
         # Detach is apparently just creating new Variable with cut off reference to previous node, so shouldn't effect the original
         # But just in case, let's do G first so that detaching G during D update don't do anything weird
         ############################
@@ -617,7 +617,7 @@ def train(model, train_loader, val_loader, input_stack, target_img, target_textu
         loss_graph["gs"].append(err_style.data[0])
             
 
-        print('G:', err_G.data[0])
+        print(('G:', err_G.data[0]))
 
         ############################
         # (2) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
@@ -680,7 +680,7 @@ def train(model, train_loader, val_loader, input_stack, target_img, target_textu
         else:
             loss_graph["d"].append(0)
 
-        print('D:', 'real_acc', "%.2f" % real_acc.data[0], 'fake_acc', "%.2f" % fake_acc.data[0], 'D_acc', D_acc.data[0])
+        print(('D:', 'real_acc', "%.2f" % real_acc.data[0], 'fake_acc', "%.2f" % fake_acc.data[0], 'D_acc', D_acc.data[0]))
 
         ############################
         # (2) Update D local network: maximize log(D(x)) + log(1 - D(G(z)))
@@ -760,7 +760,7 @@ def train(model, train_loader, val_loader, input_stack, target_img, target_textu
             else:
                 loss_graph["dl"].append(0)
 
-            print('D local:', 'real real_acc', "%.2f" % realreal_acc.data[0], 'fake fake_acc', "%.2f" % fakefake_acc.data[0], 'D_acc', D_acc.data[0])
+            print(('D local:', 'real real_acc', "%.2f" % realreal_acc.data[0], 'fake fake_acc', "%.2f" % fakefake_acc.data[0], 'D_acc', D_acc.data[0]))
             #if i % args.save_every == 0:
              #   save_network(netD_local, 'D_local', epoch, i, args)
 
