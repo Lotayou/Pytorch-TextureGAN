@@ -1,3 +1,10 @@
 *.pyc
 .idea
 venv
+checkpoints/*
+training_cloth_pretrain/*
+results/*
+*.png
+*.pth
+*.tar.gz
+*.txt
