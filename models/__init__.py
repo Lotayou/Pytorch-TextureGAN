@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
+from torch.nn import init
 from torch.autograd import Variable
 import numpy as np
 import os
 import os.path as osp
-
-
+'''
 def save_network(model, network_label, epoch, iteration, args):
     dataset = args.data_path.split(os.sep)[-1]
     save_filename = "{0}_net_{1}_{2}_{3}.pth".format(network_label, args.model, epoch, iteration)
@@ -29,7 +29,7 @@ def save_network(model, network_label, epoch, iteration, args):
 
     torch.save(model_state, save_path)
     model.cuda(device_id=args.gpu)
-    print("Saved {0} at epoch: {1}, iter: {2}".format(network_label, epoch, iteration))
+    print(("Saved {0} at epoch: {1}, iter: {2}".format(network_label, epoch, iteration)))
 
 
 def load_network(model, network_label, epoch, iteration, args):
@@ -59,17 +59,8 @@ def load_network(model, network_label, epoch, iteration, args):
     
     model.cuda(device_id=args.gpu)
 
-    print('Loaded {0} from epoch: {1} itr: {2}'.format(network_label, epoch, args.load))
-
-
-def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-    elif classname.find('BatchNorm2d') != -1 or classname.find('InstanceNorm2d') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
-
+    print(('Loaded {0} from epoch: {1} itr: {2}'.format(network_label, epoch, args.load)))
+'''
 
 def get_norm_layer(norm_type):
     if norm_type == 'batch':
@@ -77,7 +68,7 @@ def get_norm_layer(norm_type):
     elif norm_type == 'instance':
         norm_layer = nn.InstanceNorm2d
     else:
-        print('normalization layer [%s] is not found' % norm_type)
+        print(('normalization layer [%s] is not found' % norm_type))
     return norm_layer
 
 
@@ -118,7 +109,7 @@ def print_network(net):
     for param in net.parameters():
         num_params += param.numel()
     print(net)
-    print('Total number of parameters: %d' % num_params)
+    print(('Total number of parameters: %d' % num_params))
 
 
 # Defines the GAN loss which uses either LSGAN or the regular GAN.
@@ -306,7 +297,7 @@ class FeatureExtractor(nn.Module):
 
     def forward(self, x):
         outputs = []
-        for name, module in self.submodule._modules.items():
+        for name, module in list(self.submodule._modules.items()):
             x = module(x)
             if name in self.extracted_layers:
                 outputs += [x]

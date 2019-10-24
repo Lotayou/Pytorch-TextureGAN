@@ -28,11 +28,13 @@ class TextureGAN(nn.Module):
         skip_block = nn.Sequential()
 
         skip_block.add_module('main_model', self.main_model(self.input_nc, self.output_nc, self.ngf))
-        skip_block.add_module('conv_6', self.conv(self.ngf+5, self.ngf*2, 3, 1, 1))
+        # potential bug fix
+        # skip_block.add_module('conv_6', self.conv(self.ngf+5, self.ngf*2, 3, 1, 1))
+        skip_block.add_module('conv_6', self.conv(self.ngf+self.input_nc, self.ngf*2, 3, 1, 1))
         skip_block.add_module('res_block_14', self.res_block(self.ngf*2,self.ngf*2))
         skip_block.add_module('res_block_15', self.res_block(self.ngf*2,self.ngf*2))
-        skip_block.add_module('conv_7', self.conv(self.ngf*2, 3, 3, 1, 1))
-        skip_block.add_module('batch_9', self.batch_norm(3))
+        skip_block.add_module('conv_7', self.conv(self.ngf*2, self.output_nc, 3, 1, 1))
+        skip_block.add_module('batch_9', self.batch_norm(self.output_nc))
 
         return skip_block
     

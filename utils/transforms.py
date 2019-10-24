@@ -1,4 +1,4 @@
-from __future__ import division
+
 import torchvision.transforms
 import torch
 import math
@@ -124,8 +124,8 @@ def normalize_rgb(rgb_img):
     Returns:
     lab_img : torch.Tensor Normalized lab_img 
     """
-    mean = torch.zeros(rgb_img.size())
-    stds = torch.zeros(rgb_img.size())
+    mean = torch.zeros_like(rgb_img)
+    stds = torch.zeros_like(rgb_img)
     
     mean[:,0,:,:] = 0.485
     mean[:,1,:,:] = 0.456
@@ -148,8 +148,8 @@ def denormalize_lab(lab_img):
     Returns:
     lab_img : torch.Tensor Normalized lab_img 
     """
-    mean = torch.zeros(lab_img.size())
-    stds = torch.zeros(lab_img.size())
+    mean = torch.zeros_like(lab_img)
+    stds = torch.zeros_like(lab_img)
     
     mean[:,0,:,:] = 50
     mean[:,1,:,:] = 0
@@ -159,7 +159,7 @@ def denormalize_lab(lab_img):
     stds[:,1,:,:] = 128
     stds[:,2,:,:] = 128
 
-    return lab_img.double() *stds.double() + mean.double()
+    return lab_img.double() * stds.double() + mean.double()
 
 
 def denormalize_rgb(rgb_img):
@@ -172,8 +172,8 @@ def denormalize_rgb(rgb_img):
     Returns:
     lab_img : torch.Tensor Normalized lab_img 
     """
-    mean = torch.zeros(rgb_img.size())
-    stds = torch.zeros(rgb_img.size())
+    mean = torch.zeros_like(rgb_img)
+    stds = torch.zeros_like(rgb_img)
     
     mean[:,0,:,:] = 0.485
     mean[:,1,:,:] = 0.456
@@ -183,7 +183,7 @@ def denormalize_rgb(rgb_img):
     stds[:,1,:,:] = 0.224
     stds[:,2,:,:] = 0.225
 
-    return rgb_img.double() *stds.double() + mean.double()
+    return rgb_img.double() * stds.double() + mean.double()
 
 
 ###########################################################################
