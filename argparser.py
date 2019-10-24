@@ -14,11 +14,11 @@ def parse_arguments(*args):
     parser.add_argument('--gan', default='lsgan', type=str, choices=['dcgan', 'lsgan', 'wgan', 'improved wgan'],
                         help='dcgan|lsgan|wgan|improved wgan')  # todo wgan/improved wgan
 
-    parser.add_argument('--model', default='scribbler', type=str, choices=['scribbler', 'texturegan', 'pix2pix','scribbler_dilate_128'],
-                        help='scribbler|pix2pix')
+    parser.add_argument('--name', default='TextureGAN', type=str, help='name of the current experiment')  
 
-    parser.add_argument('--num_epoch', default=100, type=int,
-                        help='texture|scribbler')
+    parser.add_argument('--model', default='texturegan', type=str, choices=['scribbler', 'texturegan', 'pix2pix','scribbler_dilate_128'], help='scribbler|pix2pix')
+    parser.add_argument('--init_type', default='kaiming', type=str, choices=['normal', 'xavier', 'kaiming', 'orthogonal'])
+    parser.add_argument('--num_epoch', default=100, type=int)
 
     parser.add_argument('--visualize_every', default=10, type=int,
                         help='no. iteration to visualize the results')
@@ -44,29 +44,18 @@ def parse_arguments(*args):
 
     # parser.add_argument('--gpu', default=[0], type=int, nargs='+',
     #                     help='List of GPU IDs to use')  # TODO support cpu
-    parser.add_argument('--gpu', default=1, type=int, help="GPU ID")
+    parser.add_argument('--gpu', default=2, type=int, help="GPU ID")
 
-    parser.add_argument('--display_port', default=7779, type=int,
-                        help='port for displaying on visdom (need to match with visdom currently open port)')
-
-    parser.add_argument('--data_path', default='/home/psangkloy3/training_handbags_pretrain/', type=str,
+    parser.add_argument('--data_path', default='/backup2/Datasets/Partial_textures', type=str,
                         help='path to the data directory, expect train_skg, train_img, val_skg, val_img')
-
-    parser.add_argument('--save_dir', default='/home/psangkloy3/test/', type=str,
-                        help='path to save the model')
-
-    parser.add_argument('--load_dir', default='/home/psangkloy3/test/', type=str,
-                        help='path to save the model')
-
+    parser.add_argument('--max_dataset_size', default=2147483647, type=int)
+    parser.add_argument('--num_workers', default=4, type=int)
     parser.add_argument('--save_every', default=1000, type=int,
-                        help='no. iteration to save the models')
+                        help='no. epochs to save models')
 
-    parser.add_argument('--load_epoch', default=-1, type=int,
+    parser.add_argument('--continue_train', action='store_true')
+    parser.add_argument('--load_epoch', default=0, type=int,
                         help="The epoch number for the model to load")
-    parser.add_argument('--load', default=-1, type=int,
-                        help='load generator and discrminator from iteration n')
-    parser.add_argument('--load_D', default=-1, type=int,
-                        help='load discriminator from iteration n, priority over load')
 
     parser.add_argument('--image_size', default=128, type=int,
                         help='Training images size, after cropping')
@@ -83,7 +72,8 @@ def parse_arguments(*args):
                         help='max texture patch size')
 
     parser.add_argument('--batch_size', default=32, type=int, help="Training batch size. MUST BE EVEN NUMBER")
-
+    parser.add_argument('--input_nc', default=4, type=int, help='num of input channels')
+    parser.add_argument('--ngf', default=64, type=int, help='num of feature filters')
     parser.add_argument('--num_input_texture_patch', default=2,type=int)
     parser.add_argument('--num_local_texture_patch', default=1,type=int)
 
@@ -123,7 +113,13 @@ def parse_arguments(*args):
 
     parser.add_argument('--mode', default='texture', type=str, choices=['texture', 'scribbler'],
                         help='texture|scribbler')
-    
+                        
+    parser.add_argument('--phase', default='train', type=str, choices=['train', 'test'],
+                        help='train|test')
+                        
+    parser.add_argument('--training_stage', default='I', type=str, choices=['I', 'II'],
+                        help='I for global pre-training, II for external texture fine-tuning')
+                        
     parser.add_argument('--visualize_mode', default='train', type=str, choices=['train', 'test'],
                         help='train|test')
 
@@ -132,6 +128,9 @@ def parse_arguments(*args):
 
     parser.add_argument('--contrast', default=True, type=bool,
                         help='randomly adjusting contrast on sketch')
+
+    parser.add_argument('--use_flip', default=False, type=bool,
+                        help='Perform random flip')
 
     parser.add_argument('--occlude', default=False, type=bool,
                         help='randomly occlude part of the sketch')

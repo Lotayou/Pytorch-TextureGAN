@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
+from torch.nn import init
 from torch.autograd import Variable
 import numpy as np
 import os
 import os.path as osp
-
-
+'''
 def save_network(model, network_label, epoch, iteration, args):
     dataset = args.data_path.split(os.sep)[-1]
     save_filename = "{0}_net_{1}_{2}_{3}.pth".format(network_label, args.model, epoch, iteration)
@@ -60,16 +60,7 @@ def load_network(model, network_label, epoch, iteration, args):
     model.cuda(device_id=args.gpu)
 
     print(('Loaded {0} from epoch: {1} itr: {2}'.format(network_label, epoch, args.load)))
-
-
-def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        m.weight.data.normal_(0.0, 0.02)
-    elif classname.find('BatchNorm2d') != -1 or classname.find('InstanceNorm2d') != -1:
-        m.weight.data.normal_(1.0, 0.02)
-        m.bias.data.fill_(0)
-
+'''
 
 def get_norm_layer(norm_type):
     if norm_type == 'batch':
