@@ -8,6 +8,8 @@ import random
 
 import torch
 
+import torchvision.transforms as TVtrans
+
 
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
@@ -122,12 +124,71 @@ class GroundTruthImageFolder(data.Dataset):
         
         
 class ExternalTextureFolder(data.Dataset):
-    def __init__(self, phase, root, transform=None, target_transform=None,
-                 loader=default_loader, erode_seg=True):
-        pass
+    def __init__(self, phase, root, texture_root, transform=None, 
+                 loader=default_loader, texture_size=512, max_dataset_size=-1):
+        self.root = os.path.join(root, phase + '_images')
+        self.imgs = [os.path.join(self.root, item) 
+            for item in os.listdir(self.root)
+            if is_image_file(item)
+        ]
+        self.imgs.sort()
+        if 0 < max_dataset_size < len(self.imgs):
+            self.imgs = self.imgs[:max_dataset_size]
+            
+        texture_types = os.listdir(texture_root)
+        self.textures = []
+        for type in texture_types:
+            subfolder = os.path.join(texture_root, type)
+            self.textures += [
+                os.path.join(subfolder, item)
+                for item in os.listdir(subfolder)
+                if is_image_file(item)
+            ]    
+        self.textures.sort()
+        self.texture_num = len(self.textures)
+        print('%d external sample texture images loaded' % self.texture_num)
+        
+        self.transform = transform
+        self.loader = loader
+        self.texture_size = texture_size
+        self.default_center_crop = TVtrans.CenterCrop(self.texture_size)
+        self.default_scale = TVtrans.Resize(self.texture_size)
         
     def __getitem__(self, index):
-        pass
+        combined = self.loader(self.imgs[index])
+        w, h = combined.size
+        left_bbox = [0, 0, h, h]
+        mid_bbox = [h, 0, 2*h, h]
+        right_bbox = [2*h, 0, 3*h, h]
+        full = combined.crop(left_bbox)
+        mask = combined.crop(mid_bbox)
+        partial = combined.crop(right_bbox)
+        
+        rand_id = random.randint(0, self.texture_num-1)
+        texture = self.loader(self.textures[rand_id])
+        wt, ht = combined.size
+        # expect raw texture images have different size
+        # normalize the size for batching and torchify
+        
+        if min(wt, ht) < self.texture_size:
+            tmp_center_crop = TVtrans.CenterCrop(min(wt,ht) - 10)
+            texture = self.default_resize(tmp_center_crop(texture))
+        else:
+            texture = self.default_center_crop(texture)
+            
+        if self.transform is not None:
+            mask_lab, full_lab, partial_lab, texture_lab = \
+                self.transform([mask, full, partial, texture])
+        
+        data_dict = {
+            'mask': mask_lab[0:1],
+            'partial_lab': partial_lab,
+            'gt_lab': full_lab,
+            'texture_lab': texture_lab,
+        }
+        #for k,v in data_dict.items():
+        #    print(k, v.shape, v.max(), v.min())
+        return data_dict
         
     def __len__(self):
-        pass
+        return len(self.imgs)

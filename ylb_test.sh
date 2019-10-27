@@ -1,0 +1,2 @@
+export CUDA_VISIBLE_DEVICES='1'
+python ylb_train.py --name texturegan_smpl_uvmap_20191022 --model texturegan --phase test --training_stage I --load_epoch 35 --color_space lab --ngf 64 --data_path /backup2/Datasets/Partial_textures --batch_size 1
