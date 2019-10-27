@@ -48,6 +48,8 @@ def parse_arguments(*args):
 
     parser.add_argument('--data_path', default='/backup2/Datasets/Partial_textures', type=str,
                         help='path to the data directory, expect train_skg, train_img, val_skg, val_img')
+    parser.add_argument('--texture_path', default='/backup2/yanglingbo/data/Describable_Texture_Dataset/dtd/images', 
+                        type=str, help='path to the external texture dataset.')
     parser.add_argument('--max_dataset_size', default=2147483647, type=int)
     parser.add_argument('--num_workers', default=4, type=int)
     parser.add_argument('--save_every', default=1000, type=int,
@@ -105,6 +107,11 @@ def parse_arguments(*args):
     parser.add_argument('--texture_discrminator_loss', default=True, type=bool,
                         help='adding discrminator for texture')
     
+    parser.add_argument('--phase', default='train', type=str, choices=['train', 'test'],
+                        help='train|test')
+                        
+    parser.add_argument('--training_stage', default='I', type=str, choices=['I', 'II'],
+                        help='I for global pre-training, II for external texture fine-tuning')
     ############################################################################
     ############################################################################
     ############Not Currently Using #################################################################
@@ -114,11 +121,6 @@ def parse_arguments(*args):
     parser.add_argument('--mode', default='texture', type=str, choices=['texture', 'scribbler'],
                         help='texture|scribbler')
                         
-    parser.add_argument('--phase', default='train', type=str, choices=['train', 'test'],
-                        help='train|test')
-                        
-    parser.add_argument('--training_stage', default='I', type=str, choices=['I', 'II'],
-                        help='I for global pre-training, II for external texture fine-tuning')
                         
     parser.add_argument('--visualize_mode', default='train', type=str, choices=['train', 'test'],
                         help='train|test')

@@ -21,7 +21,9 @@ if __name__ == '__main__':
     transforms = custom_transforms.Compose(transforms_list)
     
     data_path = '/backup2/Datasets/Partial_textures'
-    dataset = StageIDataset(args.phase, data_path, transforms)
+    texture_path = '/backup2/yanglingbo/data/Describable_Texture_Dataset/dtd/images'
+    #dataset = StageIDataset(args.phase, data_path, transforms)
+    dataset = StageIIDataset(args.phase, data_path, texture_path, transforms)
     print(len(dataset))
     item = dataset[2333]
     
@@ -30,19 +32,27 @@ if __name__ == '__main__':
     mask = mask.numpy()[0]
     mask /= mask.max()
     mask = np.stack((mask,) * 3, axis=2)
-    imsave('mask.png', mask)
+    imsave('debug_folder/mask.png', mask)
     
     # texture passed.
     texture = item['gt_lab']
     texture = texture.permute(1,2,0).numpy()
     texture = color.lab2rgb(texture)
     
-    imsave('texture.png' , texture)
+    imsave('debug_folder/texture.png' , texture)
     
     # partial texture
     texture = item['partial_lab']
     texture = texture.permute(1,2,0).numpy()
     texture = color.lab2rgb(texture)
     
-    imsave('partial_texture.png' , texture)
+    imsave('debug_folder/partial_texture.png' , texture)
+    
+    # external texture 
+    texture = item['texture_lab']
+    texture = texture.permute(1,2,0).numpy()
+    texture = color.lab2rgb(texture)
+    
+    imsave('debug_folder/external_texture.png' , texture)
+    
     print('finished')

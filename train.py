@@ -100,7 +100,6 @@ def gen_local_patch(patch_size, batch_size, eroded_seg, seg, img):
         eroded_seg[:,0,int(math.floor(w-patch_size/2)):w,:] = 0
 
     for i_bs in range(bs):
-                
         i_bs = int(i_bs)
         seg_index_size = eroded_seg[i_bs,0,:,:].view(-1).size()[0]
         seg_index = torch.arange(0,seg_index_size).cuda()
@@ -130,7 +129,6 @@ def gen_local_patch(patch_size, batch_size, eroded_seg, seg, img):
 
         k = 1
         while torch.sum(seg[i_bs,0,xstart:xend,ystart:yend]) < k*patch_size*patch_size:
-                
             try:
                 k = k*0.9
                 if len(seg_one) != 0:
